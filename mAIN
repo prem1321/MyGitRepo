@@ -1,0 +1,33 @@
+public class MainScript {
+    public static String APPLICATION = "CPC PLUS";
+	public static String APP_BROWSERSEL="FireFox";
+	public static String EXECUTE_TST_GRP ,EXECTN_FOLDR_PATH, EXECTN_SUBFLDR_PATH,TESTCASES_FOLDERPATH;
+	public static WebDriver driver;
+  
+  public static String ROOT_PATH ;	
+	Login  appLogin ;
+	SoftAssert sa;
+   public static String FETCH_USER;
+	@BeforeTest(alwaysRun=true)
+	public void BackUpExecutionFolder() throws Exception {
+
+		ROOT_PATH = CommonFunction.createFolders(CommonVariables.REPORT_PATH, CommonFunction.createExecutionFolder());
+		System.out.println(ROOT_PATH);
+	}
+
+	
+	
+	@Test(enabled=true ,priority=1)
+	public void OverViewTab(Method m) throws Exception
+	{		
+		SoftAssert sa = new SoftAssert();
+		EXECUTE_TST_GRP = m.getName();
+		EXECTN_SUBFLDR_PATH = CommonVariables.REPORT_PATH+"//"+ROOT_PATH+"//"+EXECUTE_TST_GRP;
+		CommonVariables.TESTCASES_FOLDERPATH = CommonVariables.REPORT_PATH+"//"+ROOT_PATH+"//"+EXECUTE_TST_GRP+"//"+CommonVariables.TESTCASES;
+		System.out.println("Execution Sub Folder Path is-->"+EXECTN_SUBFLDR_PATH);
+		System.out.println("Execution TestCase Folder Path is-->"+CommonVariables.TESTCASES_FOLDERPATH);
+		//Instantiate WebDriver	
+		driver = BrowserFunctions.callingInhouseBrowserFunction(APP_BROWSERSEL);				
+		driver.get(CommonFunction.getPropertyFileValues(CommonVariables.LoginPagePropertyFilePath,"valUrl"));
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
