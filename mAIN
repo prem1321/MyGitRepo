@@ -31,3 +31,58 @@ public class MainScript {
 		driver.get(CommonFunction.getPropertyFileValues(CommonVariables.LoginPagePropertyFilePath,"valUrl"));
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
+@AfterMethod(alwaysRun=true)
+	public void CloseBrowser(ITestResult result)
+	{
+		try
+		{
+			if(result.getStatus() == ITestResult.FAILURE)
+			{
+				String iFailed = "Failed";
+				Thread.sleep(5000);
+				CommonFunction.captureScreenshot(driver, EXECTN_SUBFLDR_PATH, iFailed);
+				System.out.println("This is failed"); 
+				
+				if(EXECUTE_TST_GRP.contains("AddNotes")) {
+					FETCH_USER = CommonVariables.SUPPORTUSER;
+				}
+				else {
+					FETCH_USER = CommonVariables.PRACUSER;
+				}
+				CommonFunction.auditLog(CommonVariables.MODULE, APPLICATION, EXECUTE_TST_GRP,iFailed, EXECTN_SUBFLDR_PATH,FETCH_USER);
+				driver.quit();
+			}
+
+			else if(result.getStatus() == ITestResult.SUCCESS)
+			{
+				String iPassed = "Passed";
+				Thread.sleep(5000);
+				//CommonFunction.captureScreenshot(driver, EXECTN_SUBFLDR_PATH, iPassed);
+				System.out.println("This is Passed");
+				if(EXECUTE_TST_GRP.contains("AddNotes")) {
+					FETCH_USER = CommonVariables.SUPPORTUSER;
+				}
+				else {
+					FETCH_USER = CommonVariables.PRACUSER;
+				}
+				CommonFunction.auditLog(CommonVariables.MODULE, APPLICATION, EXECUTE_TST_GRP,iPassed, EXECTN_SUBFLDR_PATH,FETCH_USER);
+				driver.quit();
+
+			}
+
+			else if(result.getStatus() == ITestResult.SKIP)
+			{
+				System.out.println("This is skipped");
+
+			}
+
+
+		}
+
+		catch(Exception e)
+		{
+
+			//e.printStackTrace();
+		}
+
+	}
